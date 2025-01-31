@@ -19,13 +19,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Finance Tracker',
+        title: 'Luxury Finance Tracker',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8E44AD)), // สีม่วงหรูหรา
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9B59B6)), // สีม่วงหรูหรา
           useMaterial3: true,
-          fontFamily: 'Montserrat', // ใช้ฟอนต์ที่ดูโมเดิร์นขึ้น
+          fontFamily: 'Poppins', // เปลี่ยนฟอนต์ให้ดูแพงขึ้น
         ),
-        home: const MyHomePage(title: 'การบันทึกธุรกรรม'),
+        home: const MyHomePage(title: 'การบันทึกธุรกรรม 💸'),
       ),
     );
   }
@@ -47,18 +47,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF8E44AD), Color(0xFFD988B9)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Text(widget.title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white)),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.bar_chart, color: Colors.white),
+            icon: const Icon(Icons.bar_chart_rounded, color: Colors.white),
             onPressed: () {
-              // อนาคตอาจเพิ่มหน้า Dashboard หรือสถิติ
+              // อนาคตเพิ่มหน้าสถิติ
             },
           ),
           IconButton(
-            icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+            icon: const Icon(Icons.add_circle, color: Colors.white),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => FormScreen()));
             },
@@ -68,65 +77,95 @@ class _MyHomePageState extends State<MyHomePage> {
       body: provider.transactions.isEmpty
           ? const Center(
               child: Text(
-                "ไม่มีข้อมูลธุรกรรม",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+                "✨ ไม่มีข้อมูลธุรกรรม ✨",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey),
               ),
             )
           : Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(12),
               child: ListView.builder(
                 itemCount: provider.transactions.length,
                 itemBuilder: (context, index) {
                   Transaction data = provider.transactions[index];
-                  return Card(
-                    elevation: 5,
-                    shadowColor: Colors.purple.withOpacity(0.3),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: const LinearGradient(
+                        colors: [Colors.white70, Colors.white30],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.purple.withOpacity(0.2),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
                     margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(12),
                       title: Text(
                         data.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       subtitle: Text(
                         "${data.date.day}/${data.date.month}/${data.date.year}",
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: Colors.grey[700]),
                       ),
                       leading: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            colors: [Colors.purple, Colors.deepPurpleAccent],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.purple.withOpacity(0.5),
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        padding: const EdgeInsets.all(8),
                         child: CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          radius: 25,
+                          radius: 30,
+                          backgroundColor: Colors.white,
                           child: Text(
                             data.amount.toStringAsFixed(0),
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple),
                           ),
                         ),
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.purpleAccent),
+                      trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.purpleAccent),
                       onTap: () {
-                        // อนาคตอาจเพิ่มหน้าแสดงรายละเอียด
+                        // อนาคตเพิ่มหน้ารายละเอียด
                       },
                     ),
                   );
                 },
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FormScreen()));
-        },
-        child: const Icon(Icons.add, color: Colors.white),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.purple.withOpacity(0.5),
+              blurRadius: 15,
+              spreadRadius: 3,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          backgroundColor: Colors.white,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => FormScreen()));
+          },
+          child: const Icon(Icons.add, color: Colors.purple, size: 30),
+        ),
       ),
     );
   }
