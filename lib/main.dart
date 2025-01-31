@@ -11,23 +11,23 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) {
-            return TransactionProvider();
-          })
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 183, 58, 121)),
-            useMaterial3: true,
-          ),
-          home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        ));
+      providers: [
+        ChangeNotifierProvider(create: (context) => TransactionProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Finance Tracker',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8E44AD)), // สีม่วงหรูหรา
+          useMaterial3: true,
+          fontFamily: 'Montserrat', // ใช้ฟอนต์ที่ดูโมเดิร์นขึ้น
+        ),
+        home: const MyHomePage(title: 'การบันทึกธุรกรรม'),
+      ),
+    );
   }
 }
 
@@ -43,56 +43,91 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<TransactionProvider>();
+
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return FormScreen();
-                }));
-              },
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bar_chart, color: Colors.white),
+            onPressed: () {
+              // อนาคตอาจเพิ่มหน้า Dashboard หรือสถิติ
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FormScreen()));
+            },
+          ),
+        ],
+      ),
+      body: provider.transactions.isEmpty
+          ? const Center(
+              child: Text(
+                "ไม่มีข้อมูลธุรกรรม",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              ),
             )
-          ],
-        ),
-        body: Consumer(
-          builder: (context, TransactionProvider provider, Widget? child) {
-            return ListView.builder(
+          : Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView.builder(
                 itemCount: provider.transactions.length,
-                itemBuilder: (context, int index) {
+                itemBuilder: (context, index) {
                   Transaction data = provider.transactions[index];
                   return Card(
-                    elevation: 3,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                    elevation: 5,
+                    shadowColor: Colors.purple.withOpacity(0.3),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     child: ListTile(
-                      title: Text(data.title),
-                      subtitle: Text('วันที่บันทึกข้อมูล'),//การบ้านจร้า
-                      leading: CircleAvatar(
-                        child: FittedBox(
+                      contentPadding: const EdgeInsets.all(12),
+                      title: Text(
+                        data.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      subtitle: Text(
+                        "${data.date.day}/${data.date.month}/${data.date.year}",
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                      leading: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            colors: [Colors.purple, Colors.deepPurpleAccent],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          radius: 25,
                           child: Text(
-                            data.amount.toStringAsFixed(0)),
+                            data.amount.toStringAsFixed(0),
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
+                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.purpleAccent),
+                      onTap: () {
+                        // อนาคตอาจเพิ่มหน้าแสดงรายละเอียด
+                      },
                     ),
                   );
-                });
-          },
-          // body: Center(
-
-          //   child: Column(
-
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: <Widget>[
-          //       const Text(
-          //         'This is Home Page',
-          //       ),
-          //     ],
-          //   ),
-          // ),
-        ));
+                },
+              ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FormScreen()));
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
   }
 }

@@ -3,19 +3,20 @@ import 'package:flutter/foundation.dart';
 
 class TransactionProvider with ChangeNotifier{
   List<Transaction> transactions = [
-    Transaction(title: 'หนังสือ', amount: 100),
-    Transaction(title: 'กางเกงยีน', amount: 450),
-    Transaction(title: 'เสื้อ', amount: 150),
-    Transaction(title: 'เดรส', amount: 550),
-    Transaction(title: 'กระเป๋า', amount: 200),
-    Transaction(title: 'KFC', amount: 299),
+    Transaction(title: 'หนังสือ', amount : 300 ,date:DateTime.now() ),
+    Transaction(title: 'เสื้อยืด', amount : 200,date:DateTime.now() ),
+    Transaction(title: 'รองเท้า', amount : 359,date:DateTime.now() ),
+    Transaction(title: 'กระเป๋า', amount : 150,date:DateTime.now() ),
+    Transaction(title: 'แผ่นเกมส์', amount : 1500,date:DateTime.now() ),
+    Transaction(title: 'KFC', amount : 299,date:DateTime.now() ),
+
   ];
 
-  List<Transaction> getTransaction() {
+  List<Transaction> getTransaction(){
     return transactions;
   }
-  void addTransaction(Transaction transaction) {
+
+  void addTransaction(Transaction transaction){
     transactions.add(transaction);
   }
-
 }
